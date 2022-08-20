@@ -1,0 +1,72 @@
+Never var p*adeclare this will confuse pointer declaration and multiplication
+Never change the counter variable in the forloop itself 
+Never use a value in a for-rangeloop to change its own value
+Never use gotowith pre-tags
+Never forget to put parentheses after a function name , especially when calling a method on an object or starting a coroutine with an anonymous function
+Never use new()one map, always use make()
+When defining a String()method , do not use fmt.Printor similar code
+Never forget to use the Flush()function
+Never ignore the error message, ignoring the error will cause the program to crash
+Do not use global variables or shared memory, which make concurrent code unsafe
+println()Functions are for debugging purposes only
+
+------------------------------------------------------------------------------------------------
+
+Concatenating strings using a a += bform , especially inside a loop, is inefficient. This results in a lot of memory overhead and copying. Instead of a string, an array of characters should be used to write the contents of the string to a buffer. For example the following code example.Better when the number of loops is greater than 15
+
+var b bytes.Buffer
+...
+for condition {
+    b.WriteString(str) // 将字符串str写入缓存buffer
+}
+    return b.String()
+
+------------------------------------------------------------------------------------------------
+If you're processing a series of files inside a forloop , you need to use defer to make sure the files are closed after processing, for example:
+
+for _, file := range files {
+    if f, err = os.Open(file); err != nil {
+        return
+    }
+    // 这是错误的方式，当循环结束时文件没有关闭
+    defer f.Close()
+    // 对文件进行操作
+    f.Process(data)
+}
+
+But the at the end of the loop is defernot executed, so the file is never closed! The garbage collection mechanism may close the file automatically, but this will generate an error, better practice is:
+
+for _, file := range files {
+    if f, err = os.Open(file); err != nil {
+        return
+    }
+    // 对文件进行操作
+    f.Process(data)
+    // 关闭文件
+    f.Close()
+ }
+
+ ------------------------------------------------------------------------------------------------
+ - Slices, maps and channels, using make()
+- Arrays, structs and all value types, use new()
+https://github.com/unknwon/the-way-to-go_ZH_CN/blob/master/eBook/07.2.md
+https://github.com/unknwon/the-way-to-go_ZH_CN/blob/master/eBook/10.2.md
+
+------------------------------------------------------------------------------------------------
+we already know that a slice is actually a pointer to an underlying array. We often need to pass a slice as a parameter to a function because it is actually passing a pointer to a variable that can be changed within the function, rather than passing a copy of the data.
+
+So it should do:
+
+       func findBiggest( listOfNumbers []int ) int {}
+instead of:
+
+       func findBiggest( listOfNumbers *[]int ) int {}
+When a slice is passed as a parameter, remember not to dereference the slice.
+------------------------------------------------------------------------------------------------
+Look at the following program: nexteris an interface type, and defines a next()method to read the next byte. The function nextFew1takes an nexterinterface as a parameter and reads the numnext bytes and returns a slice: this is the correct way to do it. nextFew2But nexterpassing a pointer to an interface type as a parameter to a function: when using the next()function , the system will give a compilation error: n.next undefined (type *nexter has no field or method next)(Translator's Note: n.
+
+Never use a pointer to an interface type because it is already a pointer.
+
+------------------------------------------------------------------------------------------------
+
+

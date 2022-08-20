@@ -1,0 +1,38 @@
+(1) Detect errors when the function returns
+value, err := pack1.Func1(param1)
+
+if err != nil {
+    fmt.Printf("Error %s in pack1.Func1 with parameter %v", err.Error(), param1)
+    return err
+}
+
+// 函数Func1没有错误:
+Process(value)
+
+e.g.: os.Open(file) strconv.Atoi(str)
+
+-------------------------------------------------------
+(2) Check if there is a key value in the map
+if value, isPresent = map1[key1]; isPresent {
+    Process(value)
+}
+
+-------------------------------------------------------
+(3) Check varIwhether contains a type T
+if value, ok := varI.(T); ok {
+    Process(value)
+}
+
+-------------------------------------------------------
+(4) Check whether a channel chis closed
+for input := range ch {
+    Process(input)
+}
+or:
+
+for {
+    if input, open := <-ch; !open {
+        break // 通道是关闭的
+    }
+    Process(input)
+}

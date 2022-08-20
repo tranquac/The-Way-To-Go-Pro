@@ -1,0 +1,50 @@
+(1) How to use foror for-rangetraverse a channel:
+
+for v := range ch {
+    // do something with v
+}
+
+-------------------------------------------------------
+(2) How to detect whether a channel chis closed:
+
+//read channel until it closes or error-condition
+for {
+    if input, open := <-ch; !open {
+        break
+    }
+    fmt.Printf("%s", input)
+}
+
+-------------------------------------------------------
+(3) How to make the main program wait until the coroutine is completed through a channel (semaphore mode):
+ch := make(chan int) // Allocate a channel.
+// Start something in a goroutine; when it completes, signal on the channel.
+go func() {
+    // doSomething
+    ch <- 1 // Send a signal; value does not matter.
+}()
+doSomethingElseForAWhile()
+<-ch // Wait for goroutine to finish; discard sent value.
+
+-------------------------------------------------------
+(4) Factory template for channel: The following function is a channel factory that starts an anonymous function as a coroutine to produce a channel:
+func pump() chan int {
+    ch := make(chan int)
+    go func() {
+        for i := 0; ; i++ {
+            ch <- i
+        }
+    }()
+    return ch
+}
+
+-------------------------------------------------------
+(8) How to terminate a coroutine:runtime.Goexit()
+
+-------------------------------------------------------
+-------------------------------------------------------
+-------------------------------------------------------
+-------------------------------------------------------
+-------------------------------------------------------
+-------------------------------------------------------
+-------------------------------------------------------
